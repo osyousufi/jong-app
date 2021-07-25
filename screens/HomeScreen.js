@@ -1,6 +1,5 @@
 import React, {useState, useContext, useEffect, useLayoutEffect} from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   View,
@@ -10,9 +9,36 @@ import {
   Header,
   Input,
   Button,
+  Card,
 } from 'react-native-elements';
 
 import { WorkoutContext } from '../contexts/WorkoutContext';
+
+
+const WorkoutItem = ({workout}) => {
+
+  // useEffect(() => {
+  //   console.log(JSON.stringify(workout));
+  // }, [])
+
+  return (
+    <Card>
+      <Card.Title>{workout.name}</Card.Title>
+      <Card.Divider />
+      {
+        workout.data.map((exerciseData, idx) => {
+          return (
+            <Text key={idx}>
+              <Text>{exerciseData.name} - </Text>
+              <Text style={{textDecorationLine: 'underline'}}>{exerciseData.count} {exerciseData.weight}</Text>
+            </Text>
+          )
+        })
+      }
+
+    </Card>
+  )
+}
 
 //(workout screen) displays all workouts
 const HomeScreen = ({navigation}) => {
@@ -27,7 +53,11 @@ const HomeScreen = ({navigation}) => {
     <View style={styles.sectionContainer}>
       <Button onPress={() => navigation.navigate('ConfigureWorkouts')} title="New Workout" style={styles}/>
       <Text style={styles.sectionTitle}>My workouts:</Text>
-      <Text style={styles.sectionDescription}>bruh</Text>
+      {
+        workoutData.map((workout, idx) => {
+          return <WorkoutItem key={idx} workout={workout} />
+        })
+      }
     </View>
   )
 }

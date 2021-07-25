@@ -1,6 +1,5 @@
 import React, {useState, useContext, useEffect, useLayoutEffect} from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   View,
@@ -26,7 +25,13 @@ const Stack = createStackNavigator();
 //contains routes which link to different pages
 const App = () => {
 
-  const [workoutData, setWorkoutData] = useState([]);
+  const [workoutData, setWorkoutData] = useState([
+    {
+      id: 0,
+      name: "Workout A",
+      data:[{"id":0,"name":"Squats","weight":"60","count":"5x4"},{"id":1,"name":"Benchpress","weight":"85","count":"10x4"},{"id":2,"name":"Curls","weight":"35","count":"10x4"}]
+    }
+  ]);
 
   return (
     <SafeAreaProvider>

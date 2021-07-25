@@ -1,6 +1,5 @@
 import React, {useState, useContext, useEffect, useLayoutEffect} from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   View,
@@ -20,15 +19,16 @@ const ExerciseItem = ({id, getData}) => {
 
   const [exerciseName, setExerciseName] = useState('');
   const [exerciseWeight, setExerciseWeight] = useState(45);
-  const [exerciseType, setExerciseType] = useState('5x5');
+  const [exerciseCount, setExerciseCount] = useState('5x5');
 
   const dataStructure = {
     id: id,
     name: exerciseName,
     weight: exerciseWeight,
-    type: exerciseType,
+    count: exerciseCount,
   };
 
+  //calling getdata on state change to update parent
   useEffect(() => {
     getData(dataStructure)
   })
@@ -52,9 +52,9 @@ const ExerciseItem = ({id, getData}) => {
       {/*change to dropdown menu*/}
       <Input
         placeholder={`5x5`}
-        value={exerciseType}
-        onChangeText={setExerciseType}
-        label={'Reps x Sets'}
+        value={exerciseCount}
+        onChangeText={setExerciseCount}
+        label={'Sets x Reps'}
       />
     </Card>
   )
@@ -68,6 +68,7 @@ const ConfigureWorkoutsScreen = ({navigation}) => {
   const [workoutName, setWorkoutName] = useState('');
   const [exerciseData, setExerciseData] = useState([]);
 
+  //getting data from child (ExerciseItem)
   const getData = (childData) => {
 
     let _exerciseData = exerciseData;
@@ -77,12 +78,11 @@ const ConfigureWorkoutsScreen = ({navigation}) => {
     if(exerciseObj !== undefined) {
       _exerciseData[exerciseObjIdx].name = childData.name;
       _exerciseData[exerciseObjIdx].weight = childData.weight;
-      _exerciseData[exerciseObjIdx].type = childData.type;
+      _exerciseData[exerciseObjIdx].count = childData.count;
 
     } else {
       _exerciseData.push(childData);
     }
-
 
     setExerciseData(_exerciseData);
   }
@@ -101,17 +101,16 @@ const ConfigureWorkoutsScreen = ({navigation}) => {
         {inputs.map((value, index) => {
           return <ExerciseItem key={index} id={index} getData={getData} />
         })}
-
       </ScrollView>
-
 
       <Button
         onPress={() => {
-          setWorkoutData([...workoutData, {[workoutName]: exerciseData}])
+          setWorkoutData([...workoutData, {id: workoutData.length !== 0 ? workoutData[workoutData.length - 1].id + 1 : 0, name: workoutName, data: exerciseData}])
           navigation.navigate('Home');
         }}
         title="Add"
       />
+
     </View>
   )
 }
