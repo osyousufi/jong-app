@@ -3,6 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import {
   Text,
@@ -13,32 +14,10 @@ import {
 } from 'react-native-elements';
 
 import { WorkoutContext } from '../contexts/WorkoutContext';
+import { useNavigation } from '@react-navigation/native';
 
+import WorkoutItem from '../components/WorkoutItem';
 
-const WorkoutItem = ({workout}) => {
-
-  // useEffect(() => {
-  //   console.log(JSON.stringify(workout));
-  // }, [])
-
-  return (
-    <Card>
-      <Card.Title>{workout.name}</Card.Title>
-      <Card.Divider />
-      {
-        workout.data.map((exerciseData, idx) => {
-          return (
-            <Text key={idx}>
-              <Text>{exerciseData.name} - </Text>
-              <Text style={{textDecorationLine: 'underline'}}>{exerciseData.count} {exerciseData.weight}</Text>
-            </Text>
-          )
-        })
-      }
-
-    </Card>
-  )
-}
 
 //(workout screen) displays all workouts
 const HomeScreen = ({navigation}) => {
@@ -50,15 +29,20 @@ const HomeScreen = ({navigation}) => {
   }, [workoutData]);
 
   return(
-    <View style={styles.sectionContainer}>
-      <Button onPress={() => navigation.navigate('ConfigureWorkouts')} title="New Workout" style={styles}/>
+    <ScrollView style={styles.sectionContainer}>
+      <Button onPress={() => navigation.navigate('ConfigureWorkout')} title="New Workout" style={styles}/>
       <Text style={styles.sectionTitle}>My workouts:</Text>
       {
         workoutData.map((workout, idx) => {
-          return <WorkoutItem key={idx} workout={workout} />
+          return (
+            <WorkoutItem
+            key={idx}
+            workout={workout}
+            />
+          )
         })
       }
-    </View>
+    </ScrollView>
   )
 }
 

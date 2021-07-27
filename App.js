@@ -17,7 +17,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { WorkoutContext } from './contexts/WorkoutContext';
 import HomeScreen from './screens/HomeScreen';
-import ConfigureWorkoutsScreen from './screens/ConfigureWorkoutsScreen';
+import ConfigureWorkoutScreen from './screens/ConfigureWorkoutScreen';
 
 
 const Stack = createStackNavigator();
@@ -37,16 +37,15 @@ const App = () => {
     <SafeAreaProvider>
       <NavigationContainer>
         <WorkoutContext.Provider value={{workoutData, setWorkoutData}}>
-
           <Stack.Navigator initialRouteName="Home">
               <Stack.Screen name="Home" component={HomeScreen} />
               <Stack.Screen
-                name="ConfigureWorkouts"
-                component={ConfigureWorkoutsScreen}
-                options={{ title: 'Configure Workouts' }}
+                name="ConfigureWorkout"
+                component={ConfigureWorkoutScreen}
+                options={{ title: 'Configure Workout' }}
+                initialParams={{ screenState: 'CREATE' }}
               />
           </Stack.Navigator>
-
         </WorkoutContext.Provider>
       </NavigationContainer>
     </SafeAreaProvider>

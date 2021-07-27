@@ -3,6 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  Alert,
 } from 'react-native';
 import {
   Text,
@@ -10,16 +11,22 @@ import {
   Input,
   Button,
   Card,
+  Icon,
 } from 'react-native-elements';
 
-import { WorkoutContext } from '../contexts/WorkoutContext';
-
-
-const ExerciseItem = ({id, getData}) => {
+const ExerciseItem = ({id, getData, workoutParams}) => {
 
   const [exerciseName, setExerciseName] = useState('');
   const [exerciseWeight, setExerciseWeight] = useState(45);
   const [exerciseCount, setExerciseCount] = useState('5x5');
+
+  useLayoutEffect(() => {
+    if (workoutParams.screenState === 'EDIT') {
+      setExerciseName(workoutParams.paramData.data[id].name);
+      setExerciseWeight(workoutParams.paramData.data[id].weight);
+      setExerciseCount(workoutParams.paramData.data[id].count);
+    }
+  }, [workoutParams.screenState]);
 
   const dataStructure = {
     id: id,
@@ -60,62 +67,6 @@ const ExerciseItem = ({id, getData}) => {
   )
 }
 
-const ConfigureWorkoutsScreen = ({navigation}) => {
-
-  const {workoutData, setWorkoutData} = useContext(WorkoutContext);
-  const [inputs, setInputs] = useState([0, 1, 2]); //for later dynamic inputs
-
-  const [workoutName, setWorkoutName] = useState('');
-  const [exerciseData, setExerciseData] = useState([]);
-
-  //getting data from child (ExerciseItem)
-  const getData = (childData) => {
-
-    let _exerciseData = exerciseData;
-    let exerciseObj = exerciseData.find(obj => obj.id == childData.id);
-    let exerciseObjIdx = _exerciseData.indexOf(exerciseObj);
-
-    if(exerciseObj !== undefined) {
-      _exerciseData[exerciseObjIdx].name = childData.name;
-      _exerciseData[exerciseObjIdx].weight = childData.weight;
-      _exerciseData[exerciseObjIdx].count = childData.count;
-
-    } else {
-      _exerciseData.push(childData);
-    }
-
-    setExerciseData(_exerciseData);
-  }
-
-
-
-  return (
-    <View style={styles.container}>
-      <Input
-        placeholder='Workout Name'
-        onChangeText={setWorkoutName}
-        value={workoutName}
-      />
-
-      <ScrollView style={styles.inputsContainer}>
-        {inputs.map((value, index) => {
-          return <ExerciseItem key={index} id={index} getData={getData} />
-        })}
-      </ScrollView>
-
-      <Button
-        onPress={() => {
-          setWorkoutData([...workoutData, {id: workoutData.length !== 0 ? workoutData[workoutData.length - 1].id + 1 : 0, name: workoutName, data: exerciseData}])
-          navigation.navigate('Home');
-        }}
-        title="Add"
-      />
-
-    </View>
-  )
-}
-
-
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
@@ -149,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConfigureWorkoutsScreen;
+export default ExerciseItem;
