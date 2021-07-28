@@ -14,8 +14,6 @@ import {
 } from 'react-native-elements';
 
 import { WorkoutContext } from '../contexts/WorkoutContext';
-import { useNavigation } from '@react-navigation/native';
-
 import WorkoutItem from '../components/WorkoutItem';
 
 

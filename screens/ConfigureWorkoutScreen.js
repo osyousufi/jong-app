@@ -54,7 +54,13 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
       setWorkoutName(workoutParams.paramData.name)
       navigation.setOptions({
         headerRight: () => (
-          <Icon containerStyle={{flexDirection: 'row', margin: 15}} type={'font-awesome'} name={'trash'} onPress={() => createTwoButtonAlert()}  />
+          <Icon
+            containerStyle={{flexDirection: 'row', marginRight: 20}}
+            color={'white'}
+            type={'font-awesome'}
+            name={'trash'}
+            onPress={() => createTwoButtonAlert()}
+          />
         )
       })
     }
