@@ -47,6 +47,7 @@ const ExerciseItem = ({id, getData, workoutParams}) => {
         value={exerciseName}
         onChangeText={setExerciseName}
         label={'Exercise Name'}
+        maxLength={35}
       />
       {/*change to number pad*/}
       <Input
@@ -55,6 +56,7 @@ const ExerciseItem = ({id, getData, workoutParams}) => {
         value={exerciseWeight.toString()}
         onChangeText={setExerciseWeight}
         label={'Weight (lbs)'}
+        maxLength={4}
       />
       {/*change to dropdown menu*/}
       <Input
@@ -62,6 +64,7 @@ const ExerciseItem = ({id, getData, workoutParams}) => {
         value={exerciseCount}
         onChangeText={setExerciseCount}
         label={'Sets x Reps'}
+        maxLength={7}
       />
     </Card>
   )

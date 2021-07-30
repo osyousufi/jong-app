@@ -16,7 +16,7 @@ import {
 const CalendarScreen = () => {
   return (
     <View>
-      <Text>Calendar screen lol</Text>
+      <Text>Calendar screen</Text>
     </View>
   )
 }

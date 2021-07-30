@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useContext, useEffect, useLayoutEffect, Fragment} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -11,6 +11,8 @@ import {
   Input,
   Button,
   Card,
+  FAB,
+  Icon,
 } from 'react-native-elements';
 
 import { WorkoutContext } from '../contexts/WorkoutContext';
@@ -27,20 +29,31 @@ const HomeScreen = ({navigation}) => {
   }, [workoutData]);
 
   return(
-    <ScrollView style={styles.sectionContainer}>
-      <Button onPress={() => navigation.navigate('ConfigureWorkout')} title="New Workout" style={styles}/>
-      <Text style={styles.sectionTitle}>My workouts:</Text>
-      {
-        workoutData.map((workout, idx) => {
-          return (
-            <WorkoutItem
-            key={idx}
-            workout={workout}
-            />
-          )
-        })
-      }
-    </ScrollView>
+    <Fragment>
+      <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>My Workouts:</Text>
+        <ScrollView>
+          {
+            workoutData.map((workout, idx) => {
+              return (
+                <WorkoutItem
+                key={idx}
+                workout={workout}
+                />
+              )
+            })
+          }
+        </ScrollView>
+
+      </View>
+      <FAB
+        onPress={() => navigation.navigate('ConfigureWorkout')}
+        icon={<Icon name={'add'} color="white" />}
+        style={styles.fabButton}
+        size={'large'}
+        color={'darkslateblue'}
+      />
+    </Fragment>
   )
 }
 
@@ -61,6 +74,11 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+  fabButton: {
+    position: 'absolute',
+    bottom: 25,
+    right: 25,
+  }
 });
 
 export default HomeScreen;

@@ -4,12 +4,12 @@ import {
   StyleSheet,
   View,
   Alert,
+  Button,
 } from 'react-native';
 import {
   Text,
   Header,
   Input,
-  Button,
   Card,
   Icon,
 } from 'react-native-elements';
@@ -53,6 +53,7 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
     if (workoutParams.screenState === 'EDIT') {
       setWorkoutName(workoutParams.paramData.name)
       navigation.setOptions({
+        headerTitle: 'Edit Workout',
         headerRight: () => (
           <Icon
             containerStyle={{flexDirection: 'row', marginRight: 20}}
@@ -115,6 +116,7 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
         placeholder='Workout Name'
         onChangeText={setWorkoutName}
         value={workoutName}
+        maxLength={35}
       />
       <ScrollView style={styles.inputsContainer}>
         {inputs.map((value, index) => {
@@ -123,8 +125,8 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
       </ScrollView>
       {
         workoutParams.screenState === 'EDIT' ?
-          <Button title="Edit" onPress={() => handleDataEdit()} /> :
-          <Button title="Add" onPress={() => handleDataCreate()} />
+          <Button title="Edit" onPress={() => handleDataEdit()} color={'darkslateblue'} /> :
+          <Button title="Add" onPress={() => handleDataCreate()} color={'darkslateblue'} />
       }
     </View>
   );

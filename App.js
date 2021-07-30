@@ -9,6 +9,7 @@ import {
   Header,
   Input,
   Button,
+  Icon,
 } from 'react-native-elements';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -44,6 +45,7 @@ const getHeaderTitleStyle = (route) => {
     case 'Home':
       return {
         fontWeight: 'bold',
+
       }
   }
 
@@ -92,12 +94,21 @@ const App = () => {
                 options={({ route }) => ({
                   headerTitle: getHeaderTitle(route),
                   headerTitleStyle: getHeaderTitleStyle(route),
+                  headerRight: () => (
+                    <Icon
+                      containerStyle={{flexDirection: 'row', marginRight: 20}}
+                      color={'white'}
+                      type={'font-awesome'}
+                      name={'gear'}
+                        onPress={() => alert('Settings pressed')}
+                    />
+                  )
                 })}
               />
               <Stack.Screen
                 name="ConfigureWorkout"
                 component={ConfigureWorkoutScreen}
-                options={{ title: 'Configure Workout' }}
+                options={{ title: 'New Workout' }}
                 initialParams={{ screenState: 'CREATE' }}
               />
           </Stack.Navigator>
@@ -108,17 +119,5 @@ const App = () => {
   )
 }
 
-// <Tab.Screen
-//   name="ConfigureWorkout"
-//   component={ConfigureWorkoutScreen}
-//   options={{ title: 'Configure Workout' }}
-//   initialParams={{ screenState: 'CREATE' }}
-// />
-
-// <Header
-//   leftComponent={{ icon: 'menu', color: '#fff', iconStyle: { color: '#fff' } }}
-//   centerComponent={{ text: 'Jong App', style: { color: '#fff' } }}
-//   rightComponent={{ icon: 'home', color: '#fff' }}
-//   />
 
 export default App;
