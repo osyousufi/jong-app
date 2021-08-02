@@ -67,6 +67,7 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
     }
   }, [workoutParams.screenState]);
 
+  //LOCAL DATA UPDATE
   //getting data from child (ExerciseItem) and updating it to local variable for use inside screen
   const getData = (childData) => {
 
@@ -86,12 +87,46 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
     setExerciseData(_exerciseData);
   }
 
+  const handleInputValidation = () => {
+
+    const countRegex = /^\d{1,2}x\d{1,2}$/;
+    let result = [true];
+
+    if (workoutName == "") {
+      result = [false, 'Please enter a valid workout name.'];
+    }
+    for ( let exerciseObj of exerciseData ) {
+      if (exerciseObj.name == "") {
+        result = [false, 'Please enter a valid exercise name.'];
+      }
+      if ( exerciseObj.weight == "" || (exerciseObj.weight % 1 !== 0) ) {
+        result = [false, 'Please enter a valid weight value.'];
+      }
+      if ( !countRegex.test(exerciseObj.count) ) {
+        result = [false, 'Please enter valid sets x reps.'];
+      }
+    }
+    return result;
+  }
+
   const handleDataCreate = () => {
+
+    const validationCheck = handleInputValidation();
+    if (!validationCheck[0]){
+      return alert(validationCheck[1])
+    }
+
     setWorkoutData([...workoutData, {id: workoutData.length !== 0 ? workoutData[workoutData.length - 1].id + 1 : 0, name: workoutName, data: exerciseData}]);
     navigation.navigate('Home');
   }
 
   const handleDataEdit = () => {
+
+    const validationCheck = handleInputValidation();
+    if (!validationCheck[0]){
+      return alert(validationCheck[1])
+    }
+
     let updatedData = workoutData.map(obj => {
       if (obj.id === workoutParams.paramData.id) {
         return {...obj, name: workoutName, data: exerciseData}
@@ -117,6 +152,13 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
         onChangeText={setWorkoutName}
         value={workoutName}
         maxLength={35}
+        leftIcon={() => (
+          <Icon
+            name={'dumbbell'}
+            color={'darkslateblue'}
+            type={'material-community'}
+          />
+        )}
       />
       <ScrollView style={styles.inputsContainer}>
         {inputs.map((value, index) => {
@@ -124,9 +166,23 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
         })}
       </ScrollView>
       {
-        workoutParams.screenState === 'EDIT' ?
-          <Button title="Edit" onPress={() => handleDataEdit()} color={'darkslateblue'} /> :
-          <Button title="Add" onPress={() => handleDataCreate()} color={'darkslateblue'} />
+        workoutParams.screenState === 'EDIT' ? (
+          <Button
+            title="Edit"
+            onPress={() => {
+              handleDataEdit()
+            }}
+            color={'darkslateblue'}
+          />
+        ) : (
+          <Button
+            title="Add"
+            onPress={() => {
+              handleDataCreate()
+            }}
+            color={'darkslateblue'}
+          />
+        )
       }
     </View>
   );

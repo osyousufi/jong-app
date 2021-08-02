@@ -24,6 +24,7 @@ const WorkoutItem = ({workout}) => {
       onPress={() => {
         navigation.navigate('ConfigureWorkout', {paramData: workout, screenState: 'EDIT'});
       }}
+      style={{marginBottom: 50}}
     >
       <Card>
         <Card.Title>{workout.name}</Card.Title>

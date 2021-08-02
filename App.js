@@ -13,8 +13,8 @@ import {
 } from 'react-native-elements';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { NavigationContainer, getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -22,6 +22,14 @@ import { WorkoutContext } from './contexts/WorkoutContext';
 import HomeScreen from './screens/HomeScreen';
 import ConfigureWorkoutScreen from './screens/ConfigureWorkoutScreen';
 import CalendarScreen from './screens/CalendarScreen';
+import SettingsScreen from './screens/SettingsScreen';
+
+// const monthNames = ["January", "February", "March", "April", "May", "June",
+//   "July", "August", "September", "October", "November", "December"
+// ]
+// const dateObj = new Date()
+// const monthNumber = dateObj.getMonth()
+// const monthName = monthNames[monthNumber]
 
 const getHeaderTitle = (route) => {
   // If the focused route is not found, we need to assume it's the initial screen
@@ -31,9 +39,9 @@ const getHeaderTitle = (route) => {
 
   switch (routeName) {
     case 'Home':
-      return 'Jong (Home)';
+      return 'Jong';
     case 'Calendar':
-      return 'Calendar (Month)';
+      return `Calendar`;
   }
 }
 
@@ -45,19 +53,69 @@ const getHeaderTitleStyle = (route) => {
     case 'Home':
       return {
         fontWeight: 'bold',
-
       }
   }
 
 }
 
+// const getHeaderRightIcon = (route) => {
+//
+//   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+//
+//   switch (routeName) {
+//     case 'Home':
+//       return (
+//         <Icon
+//           containerStyle={{flexDirection: 'row', marginRight: 20}}
+//           color={'white'}
+//           type={'font-awesome'}
+//           name={'gear'}
+//             onPress={() => alert('Settings pressed')}
+//         />
+//       )
+//       case 'Calendar':
+//         return (
+//           <View style={{flexDirection: 'row'}}>
+//             <Icon
+//               containerStyle={{marginRight: 20}}
+//               color={'white'}
+//               type={'font-awesome'}
+//               name={'bell'}
+//                 onPress={() => alert('notif pressed')}
+//             />
+//             <Icon
+//               containerStyle={{marginRight: 20}}
+//               color={'white'}
+//               type={'font-awesome'}
+//               name={'gear'}
+//                 onPress={() => alert('Settings pressed')}
+//             />
+//           </View>
+//         )
+//   }
+// }
+
+
 const Tab = createBottomTabNavigator();
 
 const HomeTabs = () => {
+
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Calendar" component={CalendarScreen} />
+    <Tab.Navigator
+      tabBarOptions={{
+        style: {
+          marginTop: 10
+        }
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+      />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarScreen}
+      />
     </Tab.Navigator>
   );
 }
@@ -81,28 +139,28 @@ const App = () => {
         <WorkoutContext.Provider value={{workoutData, setWorkoutData}}>
           <Stack.Navigator
             initialRouteName="Home"
-            screenOptions={{
+            screenOptions={({navigation}) => ({
               headerStyle: {
                 backgroundColor: 'darkslateblue',
               },
               headerTintColor: 'white',
-            }}
+              headerRight: () => (
+                <Icon
+                  containerStyle={{flexDirection: 'row', marginRight: 20}}
+                  color={'white'}
+                  type={'font-awesome'}
+                  name={'gear'}
+                  onPress={() => navigation.navigate('Settings')}
+                />
+              ),
+            })}
           >
               <Stack.Screen
                 name="Home"
                 component={HomeTabs}
                 options={({ route }) => ({
-                  headerTitle: getHeaderTitle(route),
+                  title: getHeaderTitle(route),
                   headerTitleStyle: getHeaderTitleStyle(route),
-                  headerRight: () => (
-                    <Icon
-                      containerStyle={{flexDirection: 'row', marginRight: 20}}
-                      color={'white'}
-                      type={'font-awesome'}
-                      name={'gear'}
-                        onPress={() => alert('Settings pressed')}
-                    />
-                  )
                 })}
               />
               <Stack.Screen
@@ -110,6 +168,14 @@ const App = () => {
                 component={ConfigureWorkoutScreen}
                 options={{ title: 'New Workout' }}
                 initialParams={{ screenState: 'CREATE' }}
+              />
+              <Stack.Screen
+                name="Settings"
+                component={SettingsScreen}
+                options={{
+                  title: 'Settings',
+                  headerRight: () => null
+                }}
               />
           </Stack.Navigator>
         </WorkoutContext.Provider>

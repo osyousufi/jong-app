@@ -17,8 +17,8 @@ import {
 const ExerciseItem = ({id, getData, workoutParams}) => {
 
   const [exerciseName, setExerciseName] = useState('');
-  const [exerciseWeight, setExerciseWeight] = useState(45);
-  const [exerciseCount, setExerciseCount] = useState('5x5');
+  const [exerciseWeight, setExerciseWeight] = useState('');
+  const [exerciseCount, setExerciseCount] = useState('');
 
   useLayoutEffect(() => {
     if (workoutParams.screenState === 'EDIT') {
@@ -40,6 +40,7 @@ const ExerciseItem = ({id, getData, workoutParams}) => {
     getData(dataStructure)
   })
 
+
   return (
     <Card style={styles.inputContainer}>
       <Input
@@ -49,26 +50,43 @@ const ExerciseItem = ({id, getData, workoutParams}) => {
         label={'Exercise Name'}
         maxLength={35}
       />
-      {/*change to number pad*/}
       <Input
         keyboardType={"decimal-pad"}
         placeholder={`45`}
-        value={exerciseWeight.toString()}
+        value={exerciseWeight}
         onChangeText={setExerciseWeight}
         label={'Weight (lbs)'}
         maxLength={4}
       />
-      {/*change to dropdown menu*/}
       <Input
         placeholder={`5x5`}
         value={exerciseCount}
         onChangeText={setExerciseCount}
         label={'Sets x Reps'}
         maxLength={7}
+        //possible dropdown menu instead?
       />
+
     </Card>
   )
 }
+
+// <Input
+//   keyboardType={"decimal-pad"}
+//   placeholder={`5`}
+//   value={exerciseSets}
+//   onChangeText={setExerciseSets}
+//   label={'Sets'}
+//   maxLength={4}
+// />
+// <Input
+//   keyboardType={"decimal-pad"}
+//   placeholder={`5`}
+//   value={exerciseReps}
+//   onChangeText={setExerciseReps}
+//   label={'Reps'}
+//   maxLength={4}
+// />
 
 const styles = StyleSheet.create({
   sectionContainer: {
@@ -78,6 +96,9 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
+    marginLeft: 50,
+    marginRight: 50,
+    textAlign: 'center',
   },
   sectionDescription: {
     marginTop: 8,

@@ -14,7 +14,6 @@ import {
   FAB,
   Icon,
 } from 'react-native-elements';
-
 import { WorkoutContext } from '../contexts/WorkoutContext';
 import WorkoutItem from '../components/WorkoutItem';
 
@@ -47,7 +46,7 @@ const HomeScreen = ({navigation}) => {
 
       </View>
       <FAB
-        onPress={() => navigation.navigate('ConfigureWorkout')}
+        onPress={() => navigation.navigate('ConfigureWorkout', { screenState: 'CREATE' })}
         icon={<Icon name={'add'} color="white" />}
         style={styles.fabButton}
         size={'large'}
@@ -65,6 +64,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
+    marginBottom: 20,
   },
   sectionDescription: {
     marginTop: 8,

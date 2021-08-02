@@ -12,11 +12,29 @@ import {
   Button,
   Card,
 } from 'react-native-elements';
+import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 
-const CalendarScreen = () => {
+//on press, send to dynamic page that shows exercises from workout data that you choose for that day;
+//the workouts can be marked as complete and are stored in a local db (async storage?);
+//
+const CalendarScreen = ({navigation}) => {
+
+
   return (
     <View>
-      <Text>Calendar screen</Text>
+      <Calendar
+        // Enable horizontal scrolling, default = false
+        horizontal={true}
+        // Enable paging on horizontal, default = false
+        pagingEnabled={true}
+        // Set custom calendarWidth.
+        // calendarWidth={400}
+        // onDayPress={(day) => {console.log('selected day', day)}}
+        onDayPress={(day) => {
+          // navigation.navigate('Settings')
+          console.log(day)
+        }}
+      />
     </View>
   )
 }
