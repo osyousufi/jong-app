@@ -14,7 +14,7 @@ import {
   Icon,
 } from 'react-native-elements';
 
-const ExerciseItem = ({id, getData, workoutParams}) => {
+const EditableExerciseItem = ({id, getData, workoutParams}) => {
 
   const [exerciseName, setExerciseName] = useState('');
   const [exerciseWeight, setExerciseWeight] = useState('');
@@ -124,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ExerciseItem;
+export default EditableExerciseItem;

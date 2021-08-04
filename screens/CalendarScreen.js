@@ -31,8 +31,13 @@ const CalendarScreen = ({navigation}) => {
         // calendarWidth={400}
         // onDayPress={(day) => {console.log('selected day', day)}}
         onDayPress={(day) => {
-          // navigation.navigate('Settings')
-          console.log(day)
+          navigation.navigate('LoadWorkout', day);
+          // console.log(day);
+        }}
+        theme={{
+          calendarBackground: '#f2f2f2',
+          dayTextColor: 'darkslateblue',
+          textDisabledColor: 'grey',
         }}
       />
     </View>

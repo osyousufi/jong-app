@@ -15,9 +15,7 @@ import {
 } from 'react-native-elements';
 
 import { WorkoutContext } from '../contexts/WorkoutContext';
-
-import ExerciseItem from '../components/ExerciseItem';
-
+import EditableExerciseItem from '../components/ExerciseItem';
 
 const ConfigureWorkoutScreen = ({route, navigation}) => {
 
@@ -53,7 +51,7 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
     if (workoutParams.screenState === 'EDIT') {
       setWorkoutName(workoutParams.paramData.name)
       navigation.setOptions({
-        headerTitle: 'Edit Workout',
+        title: 'Edit Workout',
         headerRight: () => (
           <Icon
             containerStyle={{flexDirection: 'row', marginRight: 20}}
@@ -162,15 +160,15 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
       />
       <ScrollView style={styles.inputsContainer}>
         {inputs.map((value, index) => {
-          return <ExerciseItem key={index} id={index} getData={getData} workoutParams={workoutParams} />
+          return <EditableExerciseItem key={index} id={index} getData={getData} workoutParams={workoutParams} />
         })}
       </ScrollView>
       {
         workoutParams.screenState === 'EDIT' ? (
           <Button
-            title="Edit"
+            title="Save"
             onPress={() => {
-              handleDataEdit()
+              handleDataEdit();
             }}
             color={'darkslateblue'}
           />
@@ -178,7 +176,7 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
           <Button
             title="Add"
             onPress={() => {
-              handleDataCreate()
+              handleDataCreate();
             }}
             color={'darkslateblue'}
           />

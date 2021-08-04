@@ -23,9 +23,9 @@ const HomeScreen = ({navigation}) => {
 
   const {workoutData, setWorkoutData} = useContext(WorkoutContext);
 
-  useEffect(() => {
-    console.log(JSON.stringify(workoutData));
-  }, [workoutData]);
+  // useEffect(() => {
+  //   console.log(JSON.stringify(workoutData));
+  // }, [workoutData]);
 
   return(
     <Fragment>

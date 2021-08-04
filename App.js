@@ -15,7 +15,8 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { WorkoutContext } from './contexts/WorkoutContext';
@@ -23,6 +24,7 @@ import HomeScreen from './screens/HomeScreen';
 import ConfigureWorkoutScreen from './screens/ConfigureWorkoutScreen';
 import CalendarScreen from './screens/CalendarScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import LoadWorkoutScreen from './screens/LoadWorkoutScreen';
 
 // const monthNames = ["January", "February", "March", "April", "May", "June",
 //   "July", "August", "September", "October", "November", "December"
@@ -31,82 +33,69 @@ import SettingsScreen from './screens/SettingsScreen';
 // const monthNumber = dateObj.getMonth()
 // const monthName = monthNames[monthNumber]
 
-const getHeaderTitle = (route) => {
+
+const getHeaderOptions = (route) => {
   // If the focused route is not found, we need to assume it's the initial screen
   // This can happen during if there hasn't been any navigation inside the screen
   // In our case, it's "Feed" as that's the first screen inside the navigator
   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+  const navigation = useNavigation();
 
-  switch (routeName) {
-    case 'Home':
-      return 'Jong';
-    case 'Calendar':
-      return `Calendar`;
-  }
-}
-
-const getHeaderTitleStyle = (route) => {
-
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-
-  switch (routeName) {
-    case 'Home':
-      return {
-        fontWeight: 'bold',
-      }
+  let payload = {
+    name: '',
+    style: {},
+    icon: (
+      <Icon
+        containerStyle={{flexDirection: 'row', marginRight: 20}}
+        color={'white'}
+        type={'font-awesome'}
+        name={'gear'}
+        onPress={() => navigation.navigate('Settings')}
+      />
+    )
   }
 
+  if (routeName === 'Home') {
+    payload.name = `Jong`;
+    payload.style = {fontWeight: 'bold'}
+
+  } else if (routeName === 'Calendar') {
+    payload.name = `Calendar`;
+    payload.icon = (
+      <View style={{flexDirection: 'row'}}>
+        <Icon
+          containerStyle={{marginRight: 20}}
+          color={'white'}
+          type={'font-awesome'}
+          name={'bell'}
+            onPress={() => alert('notif pressed')}
+        />
+        <Icon
+          containerStyle={{marginRight: 20}}
+          color={'white'}
+          type={'font-awesome'}
+          name={'gear'}
+          onPress={() => navigation.navigate('Settings')}
+        />
+      </View>
+    )
+  }
+
+  return payload;
+
 }
 
-// const getHeaderRightIcon = (route) => {
-//
-//   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-//
-//   switch (routeName) {
-//     case 'Home':
-//       return (
-//         <Icon
-//           containerStyle={{flexDirection: 'row', marginRight: 20}}
-//           color={'white'}
-//           type={'font-awesome'}
-//           name={'gear'}
-//             onPress={() => alert('Settings pressed')}
-//         />
-//       )
-//       case 'Calendar':
-//         return (
-//           <View style={{flexDirection: 'row'}}>
-//             <Icon
-//               containerStyle={{marginRight: 20}}
-//               color={'white'}
-//               type={'font-awesome'}
-//               name={'bell'}
-//                 onPress={() => alert('notif pressed')}
-//             />
-//             <Icon
-//               containerStyle={{marginRight: 20}}
-//               color={'white'}
-//               type={'font-awesome'}
-//               name={'gear'}
-//                 onPress={() => alert('Settings pressed')}
-//             />
-//           </View>
-//         )
-//   }
-// }
 
-
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 const HomeTabs = () => {
 
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        style: {
-          marginTop: 10
-        }
-      }}
+    initialRouteName="Calendar"
+    activeColor="white"
+    inactiveColor="grey"
+    barStyle={{ backgroundColor: 'darkslateblue' }}
     >
       <Tab.Screen
         name="Home"
@@ -130,6 +119,11 @@ const App = () => {
       id: 0,
       name: "Workout A",
       data:[{"id":0,"name":"Squats","weight":"60","count":"5x4"},{"id":1,"name":"Benchpress","weight":"85","count":"10x4"},{"id":2,"name":"Curls","weight":"35","count":"10x4"}]
+    },
+    {
+      id: 1,
+      name: "Workout B",
+      data:[{"id":0,"name":"Pushups","weight":"630","count":"5x4"},{"id":1,"name":"Benchpress","weight":"85","count":"10x4"},{"id":2,"name":"Curls","weight":"35","count":"10x4"}]
     }
   ]);
 
@@ -138,29 +132,22 @@ const App = () => {
       <NavigationContainer>
         <WorkoutContext.Provider value={{workoutData, setWorkoutData}}>
           <Stack.Navigator
-            initialRouteName="Home"
+            initialRouteName="HomeTabs"
             screenOptions={({navigation}) => ({
               headerStyle: {
                 backgroundColor: 'darkslateblue',
               },
               headerTintColor: 'white',
-              headerRight: () => (
-                <Icon
-                  containerStyle={{flexDirection: 'row', marginRight: 20}}
-                  color={'white'}
-                  type={'font-awesome'}
-                  name={'gear'}
-                  onPress={() => navigation.navigate('Settings')}
-                />
-              ),
+
             })}
           >
               <Stack.Screen
-                name="Home"
+                name="HomeTabs"
                 component={HomeTabs}
                 options={({ route }) => ({
-                  title: getHeaderTitle(route),
-                  headerTitleStyle: getHeaderTitleStyle(route),
+                  title: getHeaderOptions(route).name,
+                  headerTitleStyle: getHeaderOptions(route).style,
+                  headerRight: () => getHeaderOptions(route).icon,
                 })}
               />
               <Stack.Screen
@@ -170,11 +157,19 @@ const App = () => {
                 initialParams={{ screenState: 'CREATE' }}
               />
               <Stack.Screen
+                name="LoadWorkout"
+                component={LoadWorkoutScreen}
+                options={{
+                  title: 'Date here',
+                  // headerRight: () => null
+                }}
+              />
+              <Stack.Screen
                 name="Settings"
                 component={SettingsScreen}
                 options={{
                   title: 'Settings',
-                  headerRight: () => null
+                  // headerRight: () => null
                 }}
               />
           </Stack.Navigator>
