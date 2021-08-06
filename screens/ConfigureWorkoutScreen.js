@@ -77,7 +77,6 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
       _exerciseData[exerciseObjIdx].name = childData.name;
       _exerciseData[exerciseObjIdx].weight = childData.weight;
       _exerciseData[exerciseObjIdx].count = childData.count;
-
     } else {
       _exerciseData.push(childData);
     }
