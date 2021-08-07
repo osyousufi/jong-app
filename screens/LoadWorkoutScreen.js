@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {
   Text,
@@ -13,110 +14,50 @@ import {
   Card,
 } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { useNavigation } from '@react-navigation/native';
 
 
 import { WorkoutContext } from '../contexts/WorkoutContext';
 
+const InteractableExerciseItem = ({data}) => {
 
-const InteractableExerciseItem = ({data, getData, dropdownValue}) => {
-
-  const [currSet, setCurrSet] = useState(0);
-  const [currRep, setCurrRep] = useState(0);
-
-  let dataStructure = {
-    ...data,
-    currSet: currSet,
-    currRep: currRep,
-  }
-
-  useEffect(() => {
-    setCurrSet(0);
-    setCurrRep(0);
-  }, [dropdownValue]);
-
-  useEffect(() => {
-    getData(dataStructure);
-  }, [currSet, currRep]);
+  const navigation = useNavigation();
 
   return (
-    <Card>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('Tracker', {paramData: data, screenState: 'NEW'});
+      }}
+    >
+      <Card>
 
-      <View style={{flex: 1, flexDirection: 'row'}}>
-        <View style={{flex: 1}}>
-          <Card.Title style={{textAlign: 'left'}}>
-            {data.name}
-          </Card.Title>
-        </View>
-        <View style={{flex: 1}}>
-          <Text style={{textAlign: 'right', textDecorationLine: 'underline'}}>
-            {`${data.count} ${data.weight}lb`}
-          </Text>
-        </View>
-      </View>
-
-      <View style={{flex: 1, flexDirection: 'row'}}>
-        <View style={{marginRight: 10, marginTop: 10}}>
-            <Button
-              title='+'
-              onPress={() => {
-                setCurrSet(currSet + 1);
-              }}
-            />
-        </View>
+        <View style={{flex: 1, flexDirection: 'row'}}>
           <View style={{flex: 1}}>
-            <Text style={{textAlign: 'center', marginTop: 20}}>
-              {`Current Set: ${currSet}`}
+            <Card.Title style={{textAlign: 'left'}}>
+              {data.name}
+            </Card.Title>
+          </View>
+          <View style={{flex: 1}}>
+            <Text style={{textAlign: 'right', textDecorationLine: 'underline'}}>
+              {`${data.count} ${data.weight}lb`}
             </Text>
           </View>
-        <View style={{marginRight: 10, marginTop: 10}}>
-          <Button
-            title='-'
-            onPress={() => {
-              setCurrSet(currSet - 1);
-            }}
-          />
         </View>
-      </View>
 
-      <View style={{flex: 1, flexDirection: 'row'}}>
-        <View style={{marginRight: 10, marginTop: 10}}>
-          <Button
-            title='+'
-            onPress={() => {
-              setCurrRep(currRep + 1);
-            }}
-          />
-        </View>
-          <View style={{flex: 1}}>
-            <Text style={{textAlign: 'center', marginTop: 20}}>
-              {`Current Rep: ${currRep}`}
-            </Text>
-          </View>
-        <View style={{marginRight: 10, marginTop: 10}}>
-          <Button
-            title='-'
-            onPress={() => {
-              setCurrRep(currRep - 1);
-            }}
-          />
-        </View>
-      </View>
-
-    </Card>
+      </Card>
+    </TouchableOpacity>
   )
 }
 
+// <Text>{trackerData.data.id === data.id ? JSON.stringify(trackerData) : null}</Text>
 const LoadWorkoutScreen = ({route, navigation}) => {
 
-
   const {workoutData, setWorkoutData} = useContext(WorkoutContext);
-
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(workoutData[0]);
   const [items, setItems] = useState([]);
+
   const [exerciseData, setExerciseData] = useState([]);
-
-
 
   const getStructuredDropdownData = () => {
 
@@ -142,27 +83,42 @@ const LoadWorkoutScreen = ({route, navigation}) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: `${route.params.dateString}`,
-    })
-  });
+      title: `${route.params?.calendarData.dateString}`,
+    });
+    // console.log(route.params.screenState)
+  }, []);
 
   const getData = (childData) => {
 
+    //
+    // let _exerciseData = exerciseData;
+    // let exerciseObj = _exerciseData.find(obj => obj.id === childData.id);
+    // let exerciseObjIdx = _exerciseData.indexOf(exerciseObj);
+    //
+    //
+    // if(exerciseObj !== undefined) {
+    //   _exerciseData[exerciseObjIdx].trackerData = JSON.parse(childData.data);
+    // }
+    //
+    // // console.log(_exerciseData)
+    // setExerciseData(_exerciseData);
+
+  }
+
+  const handleDataSave = (data) => {
     let _exerciseData = exerciseData;
-    let exerciseObj = _exerciseData.find(obj => obj.id == childData.id);
+    let exerciseObj = _exerciseData.find(obj => obj.id === data.id);
     let exerciseObjIdx = _exerciseData.indexOf(exerciseObj);
 
     if(exerciseObj !== undefined) {
-      _exerciseData[exerciseObjIdx].currSet = childData.currSet;
-      _exerciseData[exerciseObjIdx].currRep = childData.currRep;
-
-    } else {
-      _exerciseData.push(childData);
+      _exerciseData[exerciseObjIdx] = data;
     }
-
     setExerciseData(_exerciseData);
-
   }
+
+  useEffect(() => {
+    handleDataSave(route.params?.trackerData);
+  }, [route.params?.trackerData]);
 
   return (
     <Fragment>
@@ -188,13 +144,11 @@ const LoadWorkoutScreen = ({route, navigation}) => {
       </View>
       <ScrollView style={{marginTop: 100, marginBottom: 100}}>
         {
-          value && JSON.parse(value).map((obj, idx) => {
+          exerciseData.map((obj, idx) => {
             return (
               <InteractableExerciseItem
                 key={idx}
                 data={obj}
-                getData={getData}
-                dropdownValue={value}
               />
             )
           })
@@ -204,7 +158,11 @@ const LoadWorkoutScreen = ({route, navigation}) => {
       <Button
         title='Save'
         onPress={() => {
+
           console.log(exerciseData)
+          // console.log(route.params.trackerData)
+          // handleDataSave(route.params.trackerData);
+          // console.log(exerciseData)
         }}
       />
 

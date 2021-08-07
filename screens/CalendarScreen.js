@@ -31,7 +31,7 @@ const CalendarScreen = ({navigation}) => {
         // calendarWidth={400}
         // onDayPress={(day) => {console.log('selected day', day)}}
         onDayPress={(day) => {
-          navigation.navigate('LoadWorkout', day);
+          navigation.navigate('LoadWorkout', {calendarData: day, screenState: 'NEW'});
           // console.log(day);
         }}
         theme={{

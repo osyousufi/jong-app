@@ -25,6 +25,7 @@ import ConfigureWorkoutScreen from './screens/ConfigureWorkoutScreen';
 import CalendarScreen from './screens/CalendarScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import LoadWorkoutScreen from './screens/LoadWorkoutScreen';
+import TrackerScreen from './screens/TrackerScreen';
 
 // const monthNames = ["January", "February", "March", "April", "May", "June",
 //   "July", "August", "September", "October", "November", "December"
@@ -127,6 +128,7 @@ const App = () => {
     }
   ]);
 
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -172,7 +174,16 @@ const App = () => {
                   // headerRight: () => null
                 }}
               />
+              <Stack.Screen
+                name="Tracker"
+                component={TrackerScreen}
+                options={{
+                  title: 'Untitled Exercise',
+                  // headerRight: () => null
+                }}
+              />
           </Stack.Navigator>
+
         </WorkoutContext.Provider>
       </NavigationContainer>
     </SafeAreaProvider>

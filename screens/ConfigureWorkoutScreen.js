@@ -15,7 +15,7 @@ import {
 } from 'react-native-elements';
 
 import { WorkoutContext } from '../contexts/WorkoutContext';
-import EditableExerciseItem from '../components/ExerciseItem';
+import EditableExerciseItem from '../components/EditableExerciseItem';
 
 const ConfigureWorkoutScreen = ({route, navigation}) => {
 
