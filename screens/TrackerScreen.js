@@ -51,7 +51,7 @@ const TrackerScreen = ({navigation, route}) => {
 
   useEffect(() => {
     combineData(route.params.paramData, data);
-  }, [data])
+  }, [data]);
 
   return (
     <View style={styles.sectionContainer}>

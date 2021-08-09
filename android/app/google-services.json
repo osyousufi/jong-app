@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "871097252287",
+    "project_id": "jong-63bfe",
+    "storage_bucket": "jong-63bfe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871097252287:android:097234edca822a90e4090a",
+        "android_client_info": {
+          "package_name": "com.jongapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871097252287-s7leqd6cpfd8c0oq468h6en8gld6llcg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDTxpI3SRIP8EpF6hUZjQvNUHCrWnwx-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871097252287-s7leqd6cpfd8c0oq468h6en8gld6llcg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

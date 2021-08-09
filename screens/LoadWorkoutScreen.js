@@ -16,8 +16,8 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useNavigation } from '@react-navigation/native';
 
-
 import { WorkoutContext } from '../contexts/WorkoutContext';
+
 
 const InteractableExerciseItem = ({data}) => {
 
@@ -48,6 +48,7 @@ const InteractableExerciseItem = ({data}) => {
     </TouchableOpacity>
   )
 }
+
 
 // <Text>{trackerData.data.id === data.id ? JSON.stringify(trackerData) : null}</Text>
 const LoadWorkoutScreen = ({route, navigation}) => {
@@ -88,22 +89,6 @@ const LoadWorkoutScreen = ({route, navigation}) => {
     // console.log(route.params.screenState)
   }, []);
 
-  const getData = (childData) => {
-
-    //
-    // let _exerciseData = exerciseData;
-    // let exerciseObj = _exerciseData.find(obj => obj.id === childData.id);
-    // let exerciseObjIdx = _exerciseData.indexOf(exerciseObj);
-    //
-    //
-    // if(exerciseObj !== undefined) {
-    //   _exerciseData[exerciseObjIdx].trackerData = JSON.parse(childData.data);
-    // }
-    //
-    // // console.log(_exerciseData)
-    // setExerciseData(_exerciseData);
-
-  }
 
   const handleDataSave = (data) => {
     let _exerciseData = exerciseData;
@@ -159,10 +144,8 @@ const LoadWorkoutScreen = ({route, navigation}) => {
         title='Save'
         onPress={() => {
 
-          console.log(exerciseData)
-          // console.log(route.params.trackerData)
-          // handleDataSave(route.params.trackerData);
-          // console.log(exerciseData)
+          navigation.navigate('Calendar', {date: route.params?.calendarData.dateString, exerciseData: exerciseData});
+
         }}
       />
 
