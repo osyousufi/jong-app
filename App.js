@@ -14,10 +14,10 @@ import {
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
-
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createStackNavigator } from '@react-navigation/stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { WorkoutContext } from './contexts/WorkoutContext';
 import HomeScreen from './screens/HomeScreen';
@@ -93,7 +93,7 @@ const HomeTabs = () => {
 
   return (
     <Tab.Navigator
-    initialRouteName="Calendar"
+    initialRouteName="Home"
     activeColor="white"
     inactiveColor="grey"
     barStyle={{ backgroundColor: 'darkslateblue' }}
@@ -116,16 +116,6 @@ const Stack = createStackNavigator();
 const App = () => {
 
   const [workoutData, setWorkoutData] = useState([
-    {
-      id: 0,
-      name: "Workout A",
-      data:[{"id":0,"name":"Squats","weight":"60","count":"5x4"},{"id":1,"name":"Benchpress","weight":"85","count":"10x4"},{"id":2,"name":"Curls","weight":"35","count":"10x4"}]
-    },
-    {
-      id: 1,
-      name: "Workout B",
-      data:[{"id":0,"name":"Pushups","weight":"630","count":"5x4"},{"id":1,"name":"Benchpress","weight":"85","count":"10x4"},{"id":2,"name":"Curls","weight":"35","count":"10x4"}]
-    }
   ]);
 
 

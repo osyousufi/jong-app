@@ -14,6 +14,8 @@ import {
   FAB,
   Icon,
 } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { WorkoutContext } from '../contexts/WorkoutContext';
 import WorkoutItem from '../components/WorkoutItem';
 
@@ -23,9 +25,35 @@ const HomeScreen = ({navigation}) => {
 
   const {workoutData, setWorkoutData} = useContext(WorkoutContext);
 
-  // useEffect(() => {
-  //   console.log(JSON.stringify(workoutData));
-  // }, [workoutData]);
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const getWorkoutData = async (key) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(key);
+      if (jsonValue !== null) {
+        setWorkoutData(JSON.parse(jsonValue));
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+
+  useEffect(() => {
+    getWorkoutData('WORKOUT_DATA');
+  }, []);
+
+  //persist workout data
+  useEffect(() => {
+    storeData('WORKOUT_DATA', workoutData);
+  }, [workoutData]);
+
 
   return(
     <Fragment>
@@ -33,14 +61,14 @@ const HomeScreen = ({navigation}) => {
         <Text style={styles.sectionTitle}>My Workouts:</Text>
         <ScrollView>
           {
-            workoutData.map((workout, idx) => {
+            workoutData !== null ? workoutData.map((workout, idx) => {
               return (
                 <WorkoutItem
                 key={idx}
                 workout={workout}
                 />
               )
-            })
+            }) : null
           }
         </ScrollView>
 

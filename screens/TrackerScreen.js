@@ -22,7 +22,6 @@ const TrackerScreen = ({navigation, route}) => {
     navigation.setOptions({
       title: `${route.params.paramData.name}`,
     });
-    // console.log(route.params)
   }, []);
 
   const extractCountData = () => {
@@ -38,9 +37,9 @@ const TrackerScreen = ({navigation, route}) => {
   const [data, setData] = useState(
     route.params.paramData.trackerData ? route.params.paramData.trackerData : []
   );
-  const [exerciseWeight, setExerciseWeight] = useState(route.params.paramData.weight);
+  const [exerciseWeight, setExerciseWeight] = useState( parseInt(route.params.paramData.weight) );
   // const [exerciseSets, setExerciseSets] = useState(extractCountData()[0]);
-  const [exerciseReps, setExerciseReps] = useState(extractCountData()[1]);
+  const [exerciseReps, setExerciseReps] = useState( parseInt(extractCountData()[1]) );
 
 
 
@@ -66,15 +65,16 @@ const TrackerScreen = ({navigation, route}) => {
             <Button
               title="-"
               onPress={() => {
-
+                setExerciseWeight( exerciseWeight - 5 );
               }}
             />
           </View>
           <View style={{marginLeft: 20, marginRight: 20}}>
             <Input
+              keyboardType={"decimal-pad"}
               placeholder='50'
               onChangeText={setExerciseWeight}
-              value={exerciseWeight}
+              value={exerciseWeight.toString()}
               maxLength={5}
               containerStyle={{width: 100}}
               style={{textAlign: 'center'}}
@@ -84,7 +84,7 @@ const TrackerScreen = ({navigation, route}) => {
             <Button
               title="+"
               onPress={() => {
-
+                setExerciseWeight( exerciseWeight + 5 );
               }}
             />
           </View>
@@ -99,15 +99,16 @@ const TrackerScreen = ({navigation, route}) => {
             <Button
               title="-"
               onPress={() => {
-
+                setExerciseReps( exerciseReps - 1 );
               }}
             />
           </View>
           <View style={{marginLeft: 20, marginRight: 20}}>
             <Input
+              keyboardType={"decimal-pad"}
               placeholder='5'
               onChangeText={setExerciseReps}
-              value={exerciseReps}
+              value={exerciseReps.toString()}
               maxLength={5}
               containerStyle={{width: 100}}
               style={{textAlign: 'center'}}
@@ -117,7 +118,7 @@ const TrackerScreen = ({navigation, route}) => {
             <Button
               title="+"
               onPress={() => {
-
+                setExerciseReps( exerciseReps + 1 );
               }}
             />
           </View>
@@ -140,8 +141,6 @@ const TrackerScreen = ({navigation, route}) => {
           ]);
         }}
       />
-
-
 
 
     </View>

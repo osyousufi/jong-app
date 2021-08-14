@@ -13,11 +13,13 @@ import {
   Card,
   Icon,
 } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { WorkoutContext } from '../contexts/WorkoutContext';
 import EditableExerciseItem from '../components/EditableExerciseItem';
 
 const ConfigureWorkoutScreen = ({route, navigation}) => {
+
 
   const {workoutData, setWorkoutData} = useContext(WorkoutContext);
   const workoutParams = route.params;
@@ -114,6 +116,7 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
     }
 
     setWorkoutData([...workoutData, {id: workoutData.length !== 0 ? workoutData[workoutData.length - 1].id + 1 : 0, name: workoutName, data: exerciseData}]);
+
     navigation.navigate('Home');
   }
 

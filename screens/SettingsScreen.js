@@ -12,12 +12,44 @@ import {
   Button,
   Card,
 } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingsScreen = ({navigation}) => {
+
+  const getAllKeys = async () => {
+    let keys = []
+    try {
+      keys = await AsyncStorage.getAllKeys()
+    } catch(e) {
+      // read key error
+    }
+
+    console.log(keys)
+    // example console.log result:
+    // ['@MyApp_user', '@MyApp_key']
+  }
+
+  const clearAll = async () => {
+    try {
+      await AsyncStorage.clear()
+    } catch(e) {
+      // clear error
+    }
+
+    console.log('Done.')
+  }
 
   return (
     <View style={styles.sectionContainer}>
       <Text style={styles.sectionTitle}>Repeat</Text>
+      <Button
+        title='clear async data'
+        onPress={() => {
+
+          clearAll();
+
+        }}
+      />
     </View>
   )
 }

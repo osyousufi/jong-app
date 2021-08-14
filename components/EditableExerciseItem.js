@@ -16,9 +16,9 @@ import {
 
 const EditableExerciseItem = ({id, getData, workoutParams}) => {
 
-  const [exerciseName, setExerciseName] = useState('');
-  const [exerciseWeight, setExerciseWeight] = useState('');
-  const [exerciseCount, setExerciseCount] = useState('');
+  const [exerciseName, setExerciseName] = useState('Untitled Exercise');
+  const [exerciseWeight, setExerciseWeight] = useState('45');
+  const [exerciseCount, setExerciseCount] = useState('5x5');
 
   useLayoutEffect(() => {
     if (workoutParams.screenState === 'EDIT') {

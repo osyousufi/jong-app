@@ -15,6 +15,8 @@ import {
 } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useNavigation } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
+
 
 import { WorkoutContext } from '../contexts/WorkoutContext';
 
@@ -26,7 +28,7 @@ const InteractableExerciseItem = ({data}) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Tracker', {paramData: data, screenState: 'NEW'});
+        navigation.navigate('Tracker', {paramData: data});
       }}
     >
       <Card>
@@ -54,11 +56,16 @@ const InteractableExerciseItem = ({data}) => {
 const LoadWorkoutScreen = ({route, navigation}) => {
 
   const {workoutData, setWorkoutData} = useContext(WorkoutContext);
+  const [exerciseData, setExerciseData] = useState(
+    route.params?.screenState === 'EDIT' ? route.params?.exercisePayload : []
+  );
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(workoutData[0]);
   const [items, setItems] = useState([]);
+  const [currLabel, setCurrLabel] = useState(null);
 
-  const [exerciseData, setExerciseData] = useState([]);
+
 
   const getStructuredDropdownData = () => {
 
@@ -69,8 +76,9 @@ const LoadWorkoutScreen = ({route, navigation}) => {
         label: '',
         value: '',
       }
+
       itemStructure.label = workoutObj.name;
-      itemStructure.value = JSON.stringify(workoutObj.data);
+      itemStructure.value = JSON.stringify( {id: uuid.v4(), name: workoutObj.name, data: workoutObj.data} );
       _items.push(itemStructure);
     }
 
@@ -86,24 +94,8 @@ const LoadWorkoutScreen = ({route, navigation}) => {
     navigation.setOptions({
       title: `${route.params?.calendarData.dateString}`,
     });
-    // console.log(route.params.screenState)
   }, []);
 
-
-  const handleDataSave = (data) => {
-    let _exerciseData = exerciseData;
-    let exerciseObj = _exerciseData.find(obj => obj.id === data.id);
-    let exerciseObjIdx = _exerciseData.indexOf(exerciseObj);
-
-    if(exerciseObj !== undefined) {
-      _exerciseData[exerciseObjIdx] = data;
-    }
-    setExerciseData(_exerciseData);
-  }
-
-  useEffect(() => {
-    handleDataSave(route.params?.trackerData);
-  }, [route.params?.trackerData]);
 
   return (
     <Fragment>
@@ -117,7 +109,8 @@ const LoadWorkoutScreen = ({route, navigation}) => {
           items={items}
           setItems={setItems}
           onChangeValue={(v) => {
-            setExerciseData(JSON.parse(v));
+            setExerciseData(JSON.parse(v).data);
+            setCurrLabel(JSON.parse(v).name);
           }}
           zIndex={3000}
           zIndexInverse={1000}
@@ -129,7 +122,7 @@ const LoadWorkoutScreen = ({route, navigation}) => {
       </View>
       <ScrollView style={{marginTop: 100, marginBottom: 100}}>
         {
-          exerciseData.map((obj, idx) => {
+          exerciseData?.map((obj, idx) => {
             return (
               <InteractableExerciseItem
                 key={idx}
@@ -143,9 +136,7 @@ const LoadWorkoutScreen = ({route, navigation}) => {
       <Button
         title='Save'
         onPress={() => {
-
-          navigation.navigate('Calendar', {date: route.params?.calendarData.dateString, exerciseData: exerciseData});
-
+          navigation.navigate('Calendar', {date: route.params?.calendarData.dateString, exerciseData: exerciseData, workoutName: currLabel});
         }}
       />
 

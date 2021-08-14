@@ -13,127 +13,77 @@ import {
   Card,
 } from 'react-native-elements';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
-
-import database from '@react-native-firebase/database';
-
-
-//on press, send to dynamic page that shows exercises from workout data that you choose for that day;
-//the workouts can be marked as complete and are stored in a local db (async storage?);
-//
-
-let dbMarkedDates;
-database().ref('CALENDAR_DATA').once('value')
-.then(snapshot => {
-  dbMarkedDates = snapshot.val();
-});
-
-let dbExerciseData;
-database().ref('EXERCISE_DATA').once('value')
-.then(snapshot => {
-  dbExerciseData = snapshot.val();
-  // console.log(JSON.stringify(dbExerciseData))
-});
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CalendarScreen = ({route, navigation}) => {
 
+  const [localMarkedDates, setLocalMarkedDates] = useState({});
+  const [localExerciseData, setLocalExerciseData] = useState({});
 
-  const [localMarkedDates, setLocalMarkedDates] = useState(dbMarkedDates);
-  const [localExerciseData, setLocalExerciseData] = useState(dbExerciseData);
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
-  // useEffect(() => {
-  //
-  //     let exerciseData = dbExerciseData;
-  //
-  //     // if (exerciseData !== null) {
-  //     //
-  //     // }
-  //     // let exerciseObj = exerciseData.find(obj => obj.date === route.params?.exerciseData.date);
-  //     // let exerciseObjIdx = exerciseData.indexOf(exerciseObj);
-  //     //
-  //     // if (exerciseObj !== undefined) {   //if exercise obj exists:
-  //     //   exerciseData[exerciseObjIdx] = route.params?.exerciseData;
-  //     // } else { //else it doesnt exist so add it to data
-  //     //   exerciseData.push(route.params?.exerciseData);
-  //     // }
-  //     //
-  //
-  //     // database().ref('EXERCISE_DATA').set({[route.params?.date]: route.params?.exerciseData})
-  //     // .then(() => {
-  //     //   console.log('data set')
-  //     // });
-  //
-  //     // console.log(route.params?.exerciseData)
-  //
-  // }, [route.params?.exerciseData]);
+  const getMarkedDatesData = async (key) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(key);
+      if (jsonValue !== null) {
+        setLocalMarkedDates(JSON.parse(jsonValue));
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
 
-  //store local marked dates data (state)
+  const getExerciseData = async (key) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(key);
+      if (jsonValue !== null) {
+        setLocalExerciseData(JSON.parse(jsonValue));
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    getMarkedDatesData('MARKED_DATES');
+    getExerciseData('CALENDAR_DATA');
+  }, []);
+
+
+  //store local exercise + marked dates data (state)
   useEffect(() => {
 
-    route.params?.date !== undefined ? setLocalMarkedDates({
-      ...localMarkedDates,
-      [route.params?.date]: {marked: true}
-    }) : null
+    if (route.params?.exerciseData.length !== 0) {
 
-  }, [route.params?.date]);
+      route.params?.date !== undefined ? setLocalMarkedDates({
+        ...localMarkedDates,
+        [route.params?.date]: {marked: true}
+      }) : null;
 
-  //store local exercise data (state)
-  useEffect(() => {
-    route.params?.exerciseData !== undefined ? setLocalExerciseData({
-      ...localExerciseData,
-      [route.params?.date]: route.params?.exerciseData
-    }) : null
+      route.params?.exerciseData !== undefined ? setLocalExerciseData({
+        ...localExerciseData,
+        [route.params?.date]: {workoutName: route.params?.workoutName, exerciseData: route.params?.exerciseData}
+      }) : null;
+
+    }
+
   }, [route.params?.exerciseData]);
 
-  //store persistant marked dates data (firebase)
+  //store persistant marked dates data
   useEffect(() => {
-
-    if (localMarkedDates !== undefined) {
-      database().ref('CALENDAR_DATA').set(localMarkedDates)
-      .then(() => {
-        console.log('data set')
-      });
-    }
+    storeData('MARKED_DATES', localMarkedDates);
   }, [localMarkedDates]);
 
-  //store persistant exercise data (firebase)
+  //store persistant exercise data (main)
   useEffect(() => {
-
-    if (localExerciseData !== undefined) {
-      database().ref('EXERCISE_DATA').set(localExerciseData)
-      .then(() => {
-        console.log('data set')
-      });
-    }
-
-  }, [localExerciseData]);
-
-
-  // //store local exercise data (state) notes: update if existing
-  // useEffect(() => {
-  //
-  //   route.params?.exerciseData !== undefined ? setLocalExerciseData([
-  //     ...localExerciseData,
-  //     route.params
-  //   ]) : null
-  //
-  // }, [route.params?.exerciseData]);
-  //
-  //
-  // //store persistant exercise data (firebase)
-  // useEffect(() => {
-  //
-  //   // database().ref('CALENDAR_DATA').set(localMarkedDates)
-  //   // .then(() => {
-  //   //   console.log('data set')
-  //   // });
-  //   //
-  //   // database().ref('CALENDAR_DATA').once('value')
-  //   // .then(snapshot => {
-  //   //   console.log('curr calendar data:', snapshot.val());
-  //   // });
-  //
-  //   console.log(localExerciseData)
-  // }, [localExerciseData]);
+    storeData('CALENDAR_DATA', localExerciseData);
+  }, [localExerciseData])
 
 
   return (
@@ -147,8 +97,11 @@ const CalendarScreen = ({route, navigation}) => {
           // calendarWidth={400}
           // onDayPress={(day) => {console.log('selected day', day)}}
           onDayPress={(day) => {
-            navigation.navigate('LoadWorkout', {calendarData: day, screenState: 'NEW'});
-            // console.log(day);
+            if (Object.keys(localMarkedDates).includes(day.dateString)) {
+              navigation.navigate('LoadWorkout', {calendarData: day, workoutName: localExerciseData.[day.dateString].workoutName, exercisePayload: localExerciseData.[day.dateString].exerciseData, screenState: 'EDIT'});
+            } else {
+              navigation.navigate('LoadWorkout', {calendarData: day, screenState: 'NEW'});
+            }
           }}
           theme={{
             calendarBackground: '#f2f2f2',
