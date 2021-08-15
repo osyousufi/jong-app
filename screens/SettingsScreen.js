@@ -13,6 +13,7 @@ import {
   Card,
 } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
 
 const SettingsScreen = ({navigation}) => {
 
@@ -39,17 +40,44 @@ const SettingsScreen = ({navigation}) => {
     console.log('Done.')
   }
 
+  const removeValue = async () => {
+    try {
+      await AsyncStorage.removeItem('CALENDAR_DATA')
+      await AsyncStorage.removeItem('MARKED_DATES')
+    } catch(e) {
+      // remove error
+    }
+
+    console.log('Done.')
+  }
+
   return (
     <View style={styles.sectionContainer}>
       <Text style={styles.sectionTitle}>Repeat</Text>
       <Button
-        title='clear async data'
+        title='get curr keys'
         onPress={() => {
-
-          clearAll();
-
+          getAllKeys();
         }}
       />
+
+      <Button
+        title='clear all async data'
+        onPress={() => {
+          clearAll();
+          RNRestart.Restart();
+        }}
+      />
+
+      <Button
+        title='clear async key data'
+        onPress={() => {
+          removeValue();
+          RNRestart.Restart();
+        }}
+      />
+
+
     </View>
   )
 }

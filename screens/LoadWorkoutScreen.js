@@ -12,6 +12,7 @@ import {
   Input,
   Button,
   Card,
+  Icon,
 } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useNavigation } from '@react-navigation/native';
@@ -21,18 +22,17 @@ import uuid from 'react-native-uuid';
 import { WorkoutContext } from '../contexts/WorkoutContext';
 
 
-const InteractableExerciseItem = ({data}) => {
+const InteractableExerciseItem = ({data, date}) => {
 
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Tracker', {paramData: data});
+        navigation.navigate('Tracker', {date: date, paramData: data});
       }}
     >
       <Card>
-
         <View style={{flex: 1, flexDirection: 'row'}}>
           <View style={{flex: 1}}>
             <Card.Title style={{textAlign: 'left'}}>
@@ -45,14 +45,11 @@ const InteractableExerciseItem = ({data}) => {
             </Text>
           </View>
         </View>
-
       </Card>
     </TouchableOpacity>
   )
 }
 
-
-// <Text>{trackerData.data.id === data.id ? JSON.stringify(trackerData) : null}</Text>
 const LoadWorkoutScreen = ({route, navigation}) => {
 
   const {workoutData, setWorkoutData} = useContext(WorkoutContext);
@@ -64,8 +61,6 @@ const LoadWorkoutScreen = ({route, navigation}) => {
   const [value, setValue] = useState(workoutData[0]);
   const [items, setItems] = useState([]);
   const [currLabel, setCurrLabel] = useState(null);
-
-
 
   const getStructuredDropdownData = () => {
 
@@ -89,13 +84,28 @@ const LoadWorkoutScreen = ({route, navigation}) => {
     getStructuredDropdownData();
   }, [workoutData]);
 
-
   useLayoutEffect(() => {
     navigation.setOptions({
       title: `${route.params?.calendarData.dateString}`,
     });
   }, []);
 
+  const handleDataSave = () => {
+    let _exerciseData = exerciseData;
+    let exerciseObj = _exerciseData.find(obj => obj.id === route.params?.trackerPayload.id);
+    let exerciseObjIdx = _exerciseData.indexOf(exerciseObj);
+
+    if(exerciseObj !== undefined) {
+      _exerciseData[exerciseObjIdx].trackerData = route.params?.trackerPayload.data;
+    }
+    setExerciseData(_exerciseData);
+  }
+
+  useEffect(() => {
+    if (route.params?.trackerPayload !== undefined) {
+      handleDataSave();
+    }
+  }, [route.params?.trackerPayload]);
 
   return (
     <Fragment>
@@ -120,25 +130,34 @@ const LoadWorkoutScreen = ({route, navigation}) => {
           }}
         />
       </View>
-      <ScrollView style={{marginTop: 100, marginBottom: 100}}>
-        {
-          exerciseData?.map((obj, idx) => {
-            return (
-              <InteractableExerciseItem
-                key={idx}
-                data={obj}
-              />
-            )
-          })
-        }
-      </ScrollView>
 
-      <Button
-        title='Save'
-        onPress={() => {
-          navigation.navigate('Calendar', {date: route.params?.calendarData.dateString, exerciseData: exerciseData, workoutName: currLabel});
-        }}
-      />
+      <View style={{marginBottom: 50}}>
+        <Text style={styles.sectionDescription}>Press an exercise to keep track of sets & reps.</Text>
+        <ScrollView style={{marginBottom: 50}}>
+          {
+            exerciseData?.map((obj, idx) => {
+              return (
+                <InteractableExerciseItem
+                  key={idx}
+                  data={obj}
+                  date={route.params?.calendarData.dateString}
+                />
+              )
+            })
+          }
+        </ScrollView>
+
+          <View style={{alignItems: 'center'}}>
+            <Button
+              title='Save'
+              onPress={() => {
+                navigation.navigate('Calendar', {date: route.params?.calendarData.dateString, exerciseData: exerciseData, workoutName: currLabel});
+              }}
+              buttonStyle={{backgroundColor: 'darkslateblue'}}
+              containerStyle={{width: '50%', marginBottom: 50}}
+            />
+          </View>
+      </View>
 
     </Fragment>
   )
@@ -159,6 +178,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 18,
     fontWeight: '400',
+    textAlign: 'center'
   },
   highlight: {
     fontWeight: '700',

@@ -15,6 +15,7 @@ import {
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const CalendarScreen = ({route, navigation}) => {
 
   const [localMarkedDates, setLocalMarkedDates] = useState({});
@@ -53,6 +54,7 @@ const CalendarScreen = ({route, navigation}) => {
   useEffect(() => {
     getMarkedDatesData('MARKED_DATES');
     getExerciseData('CALENDAR_DATA');
+
   }, []);
 
 
@@ -105,8 +107,11 @@ const CalendarScreen = ({route, navigation}) => {
           }}
           theme={{
             calendarBackground: '#f2f2f2',
-            dayTextColor: 'darkslateblue',
+            // dayTextColor: 'darkslateblue',
             textDisabledColor: 'grey',
+            dotColor: 'darkslateblue',
+            todayTextColor: 'darkviolet',
+            arrowColor: 'darkslateblue',
           }}
           markedDates={localMarkedDates}
       />

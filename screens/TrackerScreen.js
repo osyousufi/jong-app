@@ -14,7 +14,7 @@ import {
   Divider,
   Icon,
 } from 'react-native-elements';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TrackerScreen = ({navigation, route}) => {
 
@@ -41,22 +41,20 @@ const TrackerScreen = ({navigation, route}) => {
   // const [exerciseSets, setExerciseSets] = useState(extractCountData()[0]);
   const [exerciseReps, setExerciseReps] = useState( parseInt(extractCountData()[1]) );
 
+  // useEffect(() => {
+  //   let newData = Object.create(route.params.paramData);
+  //   newData.trackerData = data;
+  //   setFinalTrackerData(newData);
+  // }, [data]);
 
+  // const saveData = () => {
+  //
+  // }
 
-  const combineData = (originalData, newData) => {
-    originalData.trackerData = newData;
-    setFinalTrackerData(originalData);
-  }
-
-  useEffect(() => {
-    combineData(route.params.paramData, data);
-  }, [data]);
 
   return (
     <View style={styles.sectionContainer}>
       <Text style={styles.sectionTitle}>Your count & weight: {route.params.paramData.count} {route.params.paramData.weight}lbs</Text>
-
-
       <View style={{marginTop: 20}}>
         <Text>Weight (lbs):</Text>
         <Divider orientation="horizontal" />
@@ -139,6 +137,13 @@ const TrackerScreen = ({navigation, route}) => {
           setData([
             ...data, {id: data.length !== 0 ? data[data.length - 1].id + 1 : 0, weight: exerciseWeight, reps: exerciseReps}
           ]);
+        }}
+      />
+
+      <Button
+        title={'save'}
+        onPress={() => {
+          navigation.navigate('LoadWorkout', {calendarData: {dateString: route.params?.date}, trackerPayload: {id: route.params?.paramData.id, data: data}} );
         }}
       />
 

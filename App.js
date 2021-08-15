@@ -68,13 +68,6 @@ const getHeaderOptions = (route) => {
           containerStyle={{marginRight: 20}}
           color={'white'}
           type={'font-awesome'}
-          name={'bell'}
-            onPress={() => alert('notif pressed')}
-        />
-        <Icon
-          containerStyle={{marginRight: 20}}
-          color={'white'}
-          type={'font-awesome'}
           name={'gear'}
           onPress={() => navigation.navigate('Settings')}
         />
