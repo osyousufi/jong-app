@@ -36,9 +36,7 @@ import TrackerScreen from './screens/TrackerScreen';
 
 
 const getHeaderOptions = (route) => {
-  // If the focused route is not found, we need to assume it's the initial screen
-  // This can happen during if there hasn't been any navigation inside the screen
-  // In our case, it's "Feed" as that's the first screen inside the navigator
+
   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
   const navigation = useNavigation();
 
@@ -90,14 +88,33 @@ const HomeTabs = () => {
     activeColor="white"
     inactiveColor="grey"
     barStyle={{ backgroundColor: 'darkslateblue' }}
+    shifting={true}
     >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
+        options={{
+          tabBarIcon: () => (
+            <Icon
+              color={'white'}
+              type={'font-awesome'}
+              name={'home'}
+            />
+          )
+        }}
       />
       <Tab.Screen
         name="Calendar"
         component={CalendarScreen}
+        options={{
+          tabBarIcon: () => (
+            <Icon
+              color={'white'}
+              type={'font-awesome'}
+              name={'calendar'}
+            />
+          )
+        }}
       />
     </Tab.Navigator>
   );

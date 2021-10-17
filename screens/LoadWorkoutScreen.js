@@ -18,37 +18,9 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useNavigation } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
 
-
 import { WorkoutContext } from '../contexts/WorkoutContext';
+import InteractableExerciseItem from '../components/InteractableExerciseItem';
 
-
-const InteractableExerciseItem = ({data, date}) => {
-
-  const navigation = useNavigation();
-
-  return (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate('Tracker', {date: date, paramData: data});
-      }}
-    >
-      <Card>
-        <View style={{flex: 1, flexDirection: 'row'}}>
-          <View style={{flex: 1}}>
-            <Card.Title style={{textAlign: 'left'}}>
-              {data.name}
-            </Card.Title>
-          </View>
-          <View style={{flex: 1}}>
-            <Text style={{textAlign: 'right', textDecorationLine: 'underline'}}>
-              {`${data.count} ${data.weight}lb`}
-            </Text>
-          </View>
-        </View>
-      </Card>
-    </TouchableOpacity>
-  )
-}
 
 const LoadWorkoutScreen = ({route, navigation}) => {
 
@@ -109,7 +81,7 @@ const LoadWorkoutScreen = ({route, navigation}) => {
 
   return (
     <Fragment>
-      <View style={styles.sectionContainer}>
+      <View style={{flex: 1, alignItems: 'center', marginTop: 50, marginBottom: 10}}>
         <DropDownPicker
           placeholder="Select a workout"
           open={open}
@@ -126,14 +98,13 @@ const LoadWorkoutScreen = ({route, navigation}) => {
           zIndexInverse={1000}
           containerStyle={{
             width: '90%',
-
           }}
         />
       </View>
 
-      <View style={{marginBottom: 50}}>
-        <Text style={styles.sectionDescription}>Press an exercise to keep track of sets & reps.</Text>
-        <ScrollView style={{marginBottom: 50}}>
+      <View style={{marginBottom: 100, marginTop: 50}}>
+
+        <ScrollView>
           {
             exerciseData?.map((obj, idx) => {
               return (
@@ -146,17 +117,25 @@ const LoadWorkoutScreen = ({route, navigation}) => {
             })
           }
         </ScrollView>
-
-          <View style={{alignItems: 'center'}}>
-            <Button
-              title='Save'
-              onPress={() => {
-                navigation.navigate('Calendar', {date: route.params?.calendarData.dateString, exerciseData: exerciseData, workoutName: currLabel});
-              }}
-              buttonStyle={{backgroundColor: 'darkslateblue'}}
-              containerStyle={{width: '50%', marginBottom: 50}}
-            />
-          </View>
+        <View style={{flexDirection: 'row', margin: 15}}>
+          <Icon
+            color={'darkslateblue'}
+            type={'font-awesome'}
+            name={'lightbulb-o'}
+            containerStyle={{paddingRight: 10}}
+          />
+          <Text style={{fontSize: 18, fontWeight: '400'}}>Tap an exercise to keep track of sets & reps.</Text>
+        </View>
+        <View style={{alignItems: 'center', marginTop: 20, marginBottom: 20}}>
+          <Button
+            title='Save'
+            onPress={() => {
+              navigation.navigate('Calendar', {date: route.params?.calendarData.dateString, exerciseData: exerciseData, workoutName: currLabel});
+            }}
+            buttonStyle={{backgroundColor: 'darkslateblue'}}
+            containerStyle={{width: '50%', marginBottom: 10}}
+          />
+        </View>
       </View>
 
     </Fragment>
@@ -175,10 +154,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   sectionDescription: {
-    marginTop: 8,
+    // marginTop: 15,
     fontSize: 18,
     fontWeight: '400',
-    textAlign: 'center'
+    // textAlign: 'center'
   },
   highlight: {
     fontWeight: '700',

@@ -13,8 +13,13 @@ import {
   Card,
   Divider,
   Icon,
+  ListItem,
 } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
+
+import SetListItem from '../components/SetListItem';
+
 
 const TrackerScreen = ({navigation, route}) => {
 
@@ -33,28 +38,49 @@ const TrackerScreen = ({navigation, route}) => {
     return [extractedSets, extractedReps];
   }
 
-  const [finalTrackerData, setFinalTrackerData] = useState({});
+
   const [data, setData] = useState(
     route.params.paramData.trackerData ? route.params.paramData.trackerData : []
   );
   const [exerciseWeight, setExerciseWeight] = useState( parseInt(route.params.paramData.weight) );
-  // const [exerciseSets, setExerciseSets] = useState(extractCountData()[0]);
   const [exerciseReps, setExerciseReps] = useState( parseInt(extractCountData()[1]) );
 
-  // useEffect(() => {
-  //   let newData = Object.create(route.params.paramData);
-  //   newData.trackerData = data;
-  //   setFinalTrackerData(newData);
-  // }, [data]);
+  useEffect(() => {
+    if (exerciseReps < 0 || exerciseReps % 1 !== 0) {
+      setExerciseReps(0);
+    }
+  }, [exerciseReps]);
 
-  // const saveData = () => {
-  //
-  // }
+  useEffect(() => {
+    if (exerciseWeight < 0 || exerciseWeight % 1 !== 0) {
+      setExerciseWeight(0);
+    }
+  }, [exerciseWeight]);
+
+  const handleSetDelete = (id) => {
+    let _data = data.filter(obj => obj.id !== id);;
+    setData(_data);
+  }
+
+  const handleSetEdit = (id) => {
+
+    let updatedData = data.map(obj => {
+      if (obj.id === id) {
+        return {...obj, weight: exerciseWeight, reps: exerciseReps}
+      } else {
+        return obj;
+      }
+    })
+
+    setData(updatedData);
+
+  }
 
 
   return (
-    <View style={styles.sectionContainer}>
-      <Text style={styles.sectionTitle}>Your count & weight: {route.params.paramData.count} {route.params.paramData.weight}lbs</Text>
+    <View style={{flex: 1, marginTop: 35, paddingHorizontal: 20}}>
+      <Text style={styles.sectionTitle}>Sets x Reps: {route.params.paramData.count}</Text>
+
       <View style={{marginTop: 20}}>
         <Text>Weight (lbs):</Text>
         <Divider orientation="horizontal" />
@@ -65,9 +91,10 @@ const TrackerScreen = ({navigation, route}) => {
               onPress={() => {
                 setExerciseWeight( exerciseWeight - 5 );
               }}
+              buttonStyle={{backgroundColor: 'darkslateblue'}}
             />
           </View>
-          <View style={{marginLeft: 20, marginRight: 20}}>
+          <View style={{marginLeft: 20, marginRight: 25}}>
             <Input
               keyboardType={"decimal-pad"}
               placeholder='50'
@@ -84,6 +111,7 @@ const TrackerScreen = ({navigation, route}) => {
               onPress={() => {
                 setExerciseWeight( exerciseWeight + 5 );
               }}
+              buttonStyle={{backgroundColor: 'darkslateblue'}}
             />
           </View>
         </View>
@@ -99,6 +127,7 @@ const TrackerScreen = ({navigation, route}) => {
               onPress={() => {
                 setExerciseReps( exerciseReps - 1 );
               }}
+              buttonStyle={{backgroundColor: 'darkslateblue'}}
             />
           </View>
           <View style={{marginLeft: 20, marginRight: 20}}>
@@ -118,6 +147,7 @@ const TrackerScreen = ({navigation, route}) => {
               onPress={() => {
                 setExerciseReps( exerciseReps + 1 );
               }}
+              buttonStyle={{backgroundColor: 'darkslateblue'}}
             />
           </View>
         </View>
@@ -126,56 +156,44 @@ const TrackerScreen = ({navigation, route}) => {
       <ScrollView>
         {
           data.map((obj, idx) => {
-            return <Text key={idx}>{obj.id} -- {obj.weight} {obj.reps}</Text>
+            return (
+              <SetListItem
+                key={idx}
+                data={obj}
+                handleSetDelete={handleSetDelete}
+                handleSetEdit={handleSetEdit}
+                idx={idx}
+              />
+            )
           })
         }
       </ScrollView>
 
-      <Button
-        title={'add set'}
-        onPress={() => {
-          setData([
-            ...data, {id: data.length !== 0 ? data[data.length - 1].id + 1 : 0, weight: exerciseWeight, reps: exerciseReps}
-          ]);
-        }}
-      />
-
-      <Button
-        title={'save'}
-        onPress={() => {
-          navigation.navigate('LoadWorkout', {calendarData: {dateString: route.params?.date}, trackerPayload: {id: route.params?.paramData.id, data: data}} );
-        }}
-      />
-
+        <View style={{flexDirection: 'row', alignSelf: 'center', marginBottom: 20}}>
+          <Button
+            title={'add set'}
+            onPress={() => {
+              setData([
+                ...data, {id: uuid.v4(), weight: exerciseWeight, reps: exerciseReps}
+              ]);
+            }}
+            containerStyle={{margin: 10}}
+            buttonStyle={{backgroundColor: 'darkslateblue'}}
+          />
+          <Button
+            title={'save'}
+            onPress={() => {
+              navigation.navigate('LoadWorkout', {calendarData: {dateString: route.params?.date}, trackerPayload: {id: route.params?.paramData.id, data: data}} );
+            }}
+            containerStyle={{margin: 10}}
+            buttonStyle={{backgroundColor: 'darkslateblue'}}
+          />
+        </View>
 
     </View>
   )
 }
 
-// <Button
-//   title={'save'}
-//   onPress={() => {
-//     // console.log(finalTrackerData)
-//     navigation.navigate('LoadWorkout', {trackerData: finalTrackerData} );
-//   }}
-// />
-
-// <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
-//   <View style={{marginRight: 10, marginTop: 10}}>
-//     <Button title="-"/>
-//   </View>
-//   <View style={{flex: 1}}>
-//     <Input
-//       placeholder='50'
-//       onChangeText={setExerciseWeight}
-//       value={exerciseWeight}
-//       maxLength={5}
-//     />
-//   </View>
-//   <View style={{marginRight: 10, marginTop: 10}}>
-//     <Button title="+"/>
-//   </View>
-// </View>
 
 const styles = StyleSheet.create({
   sectionContainer: {

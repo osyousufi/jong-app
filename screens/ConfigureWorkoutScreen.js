@@ -77,7 +77,7 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
 
     if(exerciseObj !== undefined) {
       _exerciseData[exerciseObjIdx].name = childData.name;
-      _exerciseData[exerciseObjIdx].weight = childData.weight;
+      // _exerciseData[exerciseObjIdx].weight = childData.weight;
       _exerciseData[exerciseObjIdx].count = childData.count;
     } else {
       _exerciseData.push(childData);
@@ -98,9 +98,9 @@ const ConfigureWorkoutScreen = ({route, navigation}) => {
       if (exerciseObj.name == "") {
         result = [false, 'Please enter a valid exercise name.'];
       }
-      if ( exerciseObj.weight == "" || (exerciseObj.weight % 1 !== 0) ) {
-        result = [false, 'Please enter a valid weight value.'];
-      }
+      // if ( exerciseObj.weight == "" || (exerciseObj.weight % 1 !== 0) ) {
+      //   result = [false, 'Please enter a valid weight value.'];
+      // }
       if ( !countRegex.test(exerciseObj.count) ) {
         result = [false, 'Please enter valid sets x reps.'];
       }

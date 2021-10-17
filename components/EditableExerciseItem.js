@@ -17,13 +17,13 @@ import {
 const EditableExerciseItem = ({id, getData, workoutParams}) => {
 
   const [exerciseName, setExerciseName] = useState('Untitled Exercise');
-  const [exerciseWeight, setExerciseWeight] = useState('45');
+  // const [exerciseWeight, setExerciseWeight] = useState('45');
   const [exerciseCount, setExerciseCount] = useState('5x5');
 
   useLayoutEffect(() => {
     if (workoutParams.screenState === 'EDIT') {
       setExerciseName(workoutParams.paramData.data[id].name);
-      setExerciseWeight(workoutParams.paramData.data[id].weight);
+      // setExerciseWeight(workoutParams.paramData.data[id].weight);
       setExerciseCount(workoutParams.paramData.data[id].count);
     }
   }, [workoutParams.screenState]);
@@ -31,15 +31,24 @@ const EditableExerciseItem = ({id, getData, workoutParams}) => {
   const dataStructure = {
     id: id,
     name: exerciseName,
-    weight: exerciseWeight,
+    // weight: exerciseWeight,
     count: exerciseCount,
   };
 
   //calling getdata on state change to update parent
   useEffect(() => {
-    getData(dataStructure)
-  })
+    getData(dataStructure);
+  });
 
+  // <Input
+  //   keyboardType={"decimal-pad"}
+  //   placeholder={`45`}
+  //   value={exerciseWeight}
+  //   onChangeText={setExerciseWeight}
+  //   label={'Weight (lbs)'}
+  //   maxLength={4}
+  // />
+  // above code for below vvv
 
   return (
     <Card style={styles.inputContainer}>
@@ -50,14 +59,7 @@ const EditableExerciseItem = ({id, getData, workoutParams}) => {
         label={'Exercise Name'}
         maxLength={35}
       />
-      <Input
-        keyboardType={"decimal-pad"}
-        placeholder={`45`}
-        value={exerciseWeight}
-        onChangeText={setExerciseWeight}
-        label={'Weight (lbs)'}
-        maxLength={4}
-      />
+
       <Input
         placeholder={`5x5`}
         value={exerciseCount}
@@ -71,22 +73,6 @@ const EditableExerciseItem = ({id, getData, workoutParams}) => {
   )
 }
 
-// <Input
-//   keyboardType={"decimal-pad"}
-//   placeholder={`5`}
-//   value={exerciseSets}
-//   onChangeText={setExerciseSets}
-//   label={'Sets'}
-//   maxLength={4}
-// />
-// <Input
-//   keyboardType={"decimal-pad"}
-//   placeholder={`5`}
-//   value={exerciseReps}
-//   onChangeText={setExerciseReps}
-//   label={'Reps'}
-//   maxLength={4}
-// />
 
 const styles = StyleSheet.create({
   sectionContainer: {

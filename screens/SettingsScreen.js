@@ -40,41 +40,36 @@ const SettingsScreen = ({navigation}) => {
     console.log('Done.')
   }
 
-  const removeValue = async () => {
-    try {
-      await AsyncStorage.removeItem('CALENDAR_DATA')
-      await AsyncStorage.removeItem('MARKED_DATES')
-    } catch(e) {
-      // remove error
-    }
-
-    console.log('Done.')
-  }
+  // const removeValue = async () => {
+  //   try {
+  //     await AsyncStorage.removeItem('CALENDAR_DATA')
+  //     await AsyncStorage.removeItem('MARKED_DATES')
+  //   } catch(e) {
+  //     // remove error
+  //   }
+  //
+  //   console.log('Done.')
+  // }
 
   return (
     <View style={styles.sectionContainer}>
-      <Text style={styles.sectionTitle}>Repeat</Text>
       <Button
-        title='get curr keys'
+        title='Get Data Keys (Dev)'
         onPress={() => {
           getAllKeys();
         }}
+        containerStyle={styles.button}
+        buttonStyle={{backgroundColor: 'darkslateblue'}}
       />
 
       <Button
-        title='clear all async data'
+        title='Clear All Data'
         onPress={() => {
           clearAll();
           RNRestart.Restart();
         }}
-      />
-
-      <Button
-        title='clear async key data'
-        onPress={() => {
-          removeValue();
-          RNRestart.Restart();
-        }}
+        containerStyle={styles.button}
+        buttonStyle={{backgroundColor: 'darkslateblue'}}
       />
 
 
@@ -99,6 +94,9 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+  button: {
+    margin: 20,
+  }
 });
 
 export default SettingsScreen;
